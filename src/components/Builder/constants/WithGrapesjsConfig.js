@@ -7,7 +7,6 @@ import { plugin1 } from "./Plugin";
 function loadDependency(plugin) {
     // plugin.forEach((value) => require(`../dist/${value.name}.min`));
   }
-  
   const getOptions = (plugin) => {
     let optMap = new Map();
     plugin.forEach((value) => {
@@ -133,6 +132,7 @@ const WithGrapesjsConfig = dynamicConfiguration => {
         }
       ],
     },
+    
     domComponents: {
         storeWrapper: 1,
         //styles for body
@@ -170,13 +170,34 @@ const WithGrapesjsConfig = dynamicConfiguration => {
         storageType: "",
         storeOnChange: true,
         storeAfterUpload: true,
-        assets: [],
-        uploadFile:function(e){
-          var files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
-          // ...send somewhere     
-          console.log(files)
+        assets: [
+          'https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80',
+          // Pass an object with your properties
+          {
+            type: 'image',
+            src: 'https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80',
+            height: 350,
+            width: 250,
+            name: 'display'
           },
+          {
+            // As the 'image' is the base type of assets, omitting it will
+            // be set as `image` by default
+            src: 'https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80',
+            height: 350,
+            width: 250,
+            name: 'displayName'
+          },
+         ],
+
+       
+          uploadFile:function(e){
+            var files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
+            // ...send somewhere     
+            console.log(files)
+            },
       },
+      
       plugins:[plugin1],
       // plugins: [...pluginName,CodeEditor,exportCode],
       // pluginsOpts: { ...pluginOpts,CodeEditor:{},exportCode:{} },
@@ -701,7 +722,8 @@ const WithGrapesjsConfig = dynamicConfiguration => {
         id: "gjs-", // Prefix identifier that will be used on parameters
         type: "local", // Type of the storage
         autosave: true, // Store data automatically
-        autoload: false, // Autoload stored data on init
+        autoload: true, // Autoload stored data on init
+        
         stepsBeforeSave: 1, // If autosave enabled, indicates how many changes are necessary before store method is triggered
       },
       canvas: {

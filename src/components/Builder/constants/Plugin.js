@@ -1,43 +1,40 @@
-export const plugin1 = (editor, opts={}) =>{
-    const labels = {
-        block1: true,
-        block2: true,
-    }
-
-    const categories = {
-        category1: 'category1',
-        category2: 'category2',
-    }
-
-    opts = { labels: labels, categories: categories };
-    loadComponents(editor, opts)
-}
-
+export const plugin1 = (editor, opts = {}) => {
+  const labels = {
+    block1: true,
+    block2: true,
+    block3: true,
+    block4: true,
+    block5: true,
+  };
+  const categories = {
+    category1: "Section1",
+    category2: "Section2",
+    category3: "Section3",
+    category4: "Section4",
+    category5: "Section5",
+  };
+  opts = { labels: labels, categories: categories };
+  loadComponents(editor, opts);
+};
 const loadComponents = (editor, options) => {
-    const { labels, categories } = options;
-    if(labels?.block1){
-        editor.BlockManager.add('block1', {
-            label: 'Simple block',
-            category: categories?.category1,
-            content: `
-            <!--
-  This example requires updating your template:
-
-  <html class="h-full bg-gray-100">
-  <body class="h-full">
--->
+  const { labels, categories } = options;
+  if (labels?.block1) {
+    editor.BlockManager.add("block1", {
+      label: "Simple block",
+      category: categories?.category1,
+      content: `
 <div class="min-h-full">
-  <nav class="bg-gray-800">
+  <nav class="bg-gray-100">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
           <div class="flex-shrink-0">
-            <img class="h-8 w-8" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
+            <img class="h-8 w-8" src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80" alt="Your Company">
           </div>
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
               <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              <a href="#" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Dashboard</a>
+              <a href="#" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Some Text</a>
 
               <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Team</a>
 
@@ -63,7 +60,7 @@ const loadComponents = (editor, options) => {
               <div>
                 <button type="button" class="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                   <span class="sr-only">Open user menu</span>
-                  <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                  <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80" alt="">
                 </button>
               </div>
 
@@ -109,7 +106,7 @@ const loadComponents = (editor, options) => {
     <div class="md:hidden" id="mobile-menu">
       <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
         <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-        <a href="#" class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">Dashboard</a>
+        <a href="#" class="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">Some Text</a>
 
         <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Team</a>
 
@@ -122,7 +119,7 @@ const loadComponents = (editor, options) => {
       <div class="border-t border-gray-700 pt-4 pb-3">
         <div class="flex items-center px-5">
           <div class="flex-shrink-0">
-            <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+            <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80" alt="">
           </div>
           <div class="ml-3">
             <div class="text-base font-medium leading-none text-white">Tom Cook</div>
@@ -148,7 +145,7 @@ const loadComponents = (editor, options) => {
 
   <header class="bg-white shadow">
     <div class="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
-      <h1 class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900">Some Text</h1>
     </div>
   </header>
   <main>
@@ -158,13 +155,49 @@ const loadComponents = (editor, options) => {
   </main>
 </div>
             `,
-          });
-    }
-    if(labels?.block2){
-        editor.BlockManager.add('my-second-block', {
-            label: 'Simple block 2',
-            category: categories?.category2,
-            content: '<div class="my-block">This is a simple block 2</div>',
-          });   
-    }
-}
+    });
+  }
+  if (labels?.block2) {
+    editor.BlockManager.add("my-second-block", {
+      label: "Simple block 2",
+      category: categories?.category2,
+      content: '<div class="my-block">This is a simple block 2</div>',
+    });
+  }
+  if (labels?.block3) {
+    editor.BlockManager.add("my-third-block", {
+      label: "Simple block 3",
+      category: categories?.category3,
+      content: '<div class="my-block">This is a simple block 3</div>',
+    });
+  }
+
+  if (labels?.block4) {
+    let arr = [
+      '<div class="my-block">This is a simple block 4</div>',
+      '<div class="my-block">This is a simple block 5</div>',
+
+      `<div class="row">
+      <div class="col-sm-6 col-md-4">
+        <div class="thumbnail">
+          <img src="" alt="">
+          <div class="caption">
+            <h3>Thumbnail label</h3>
+            <p>...</p>
+            <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+          </div>
+        </div>
+      </div>
+    </div>`,
+    ];
+
+    // Loop through the array and add each component to the editor.BlockManager
+    arr.forEach((content, index) => {
+      editor.BlockManager.add(`my-block-${index + 1}`, {
+        label: `<img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80"/>`,
+        category: categories?.category4,
+        content: content,
+      });
+    });
+  }
+};
