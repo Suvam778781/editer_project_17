@@ -1,13 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
-import { GrapeJSEditor } from './components/EditCompo';
-import React, { useEffect, useRef, useState } from 'react';
-import grapesjs from 'grapesjs';
-import 'grapesjs/dist/css/grapes.min.css';
+import AppContainer from './containers/App';
+
 function App() {
   return (
     <div className="App">
-      <GrapeJSEditor/>
+      {/* <GrapesjsMain/> */}
+      <AppContainer/>
     </div>
   );
 }
