@@ -50,13 +50,9 @@ const Card = (props) => {
     return (
         <div>
           {
-            // displayPage && initAppData.name ?
             <WithGrapesjs {...props} data={initAppData} setData={setData}/>
-            // :
-            // <LoadingIndicator/>
           }
         </div>
     )
 }
-
 export default Card

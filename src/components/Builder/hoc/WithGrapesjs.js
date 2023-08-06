@@ -1,22 +1,23 @@
-import React, { useEffect, useState, useRef } from 'react';
-import Grapesjs from 'grapesjs';
-import 'grapesjs/dist/css/grapes.min.css';
-import dynamicConfig from '../constants/WithGrapesjsConfig';
-import '../styles/App.css';
-import Drawer from '@mui/material/Drawer';
-import { TuneOutlined } from '@mui/icons-material';
-import { style } from '../components/common';
-import { KeyboardBackspaceOutlined } from '@mui/icons-material';
+import React, { useEffect, useState, useRef } from "react";
+import Grapesjs from "grapesjs";
+import "grapesjs/dist/css/grapes.min.css";
+import dynamicConfig from "../constants/WithGrapesjsConfig";
+import "../styles/App.css";
+import "../index.css"
+import Drawer from "@mui/material/Drawer";
+import { TuneOutlined } from "@mui/icons-material";
+import { style } from "../components/common";
+import { KeyboardBackspaceOutlined } from "@mui/icons-material";
 
 const filterAssets = (assets, group) => {
   const images = assets
-    ? assets.map(items => {
+    ? assets.map((items) => {
         if (items.group === group) {
           return items.url;
         }
       })
     : [];
-  const imageData = images.filter(items => {
+  const imageData = images.filter((items) => {
     if (!undefined) {
       return items;
     }
@@ -34,8 +35,57 @@ const initialHtmlState = {
     '<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">',
 };
 
-const WithGrapesjs = props => {
-  console.log(props)
+const WithGrapesjs = (props) => {
+  const [showSecondarySidebar, setShowSecondarySidebar] = useState(false);
+
+  const blockRef = useRef(null);
+
+  // Function to handle clicks outside the "blocks" div
+  const handleClickOutside = (event) => {
+    if (blockRef.current && !blockRef.current.contains(event.target)) {
+      setShowSecondarySidebar(false);
+    }
+  };
+  useEffect(() => {
+    // Add event listener when the component mounts
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Remove event listener when the component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+  const sidebarItems = [
+    {
+      label: "Pages",
+      image:
+        "https://static.thenounproject.com/png/55209-200.png"
+    },
+    {
+      label: "Blocks",
+      image:
+        "https://cdn-icons-png.flaticon.com/512/30/30254.png"
+    },
+    {
+      label: "Styles",
+      image:
+        "https://cdn-icons-png.flaticon.com/128/2206/2206009.png"
+    },
+    {
+      label: "Colors",
+      image:
+        "https://cdn-icons-png.flaticon.com/128/2206/2206009.png"
+    },
+    {
+      label: "Fonts",
+      image:
+        "https://cdn-icons-png.flaticon.com/128/2206/2206009.png"
+    },
+  ];
+  const handleLinkClick = () => {
+    setShowSecondarySidebar(true);
+  };
+
   /** props */
   const { data, setData } = props;
 
@@ -48,27 +98,27 @@ const WithGrapesjs = props => {
   const [initialComponents, setInitialComponents] = useState(initialHtmlState);
   const [editor, setEditor] = useState({});
   const [builder, setBuilder] = useState({
-    panelRight:false
-  })
+    panelRight: false,
+  });
   const [settingOpen, setsettingOpen] = useState({
-    name:'',
-    domain:'',
-    open:false
-  })
+    name: "",
+    domain: "",
+    open: false,
+  });
 
   useEffect(() => {
     setInitialComponents({
       ...initialComponents,
-      html:data.content.html,
-      css:data.content.css,
-    })
+      html: data.content.html,
+      css: data.content.css,
+    });
     setsettingOpen({
       ...settingOpen,
-      name : data.name,
-      domain : data.customdomain
-    })
-  }, [data])
-  
+      name: data.name,
+      domain: data.customdomain,
+    });
+  }, [data]);
+
   /** Grapes js Initialization */
   const loadGrapesJs = async () => {
     const editor = await Grapesjs.init(dynamicConfig(data.configuration));
@@ -87,7 +137,7 @@ const WithGrapesjs = props => {
     // console.log(editor.getSelected);
     // Scroll smoothly (this behavior can be polyfilled)
     // canvas.scrollTo(selected, { alignToTop : false });
-    canvas.scrollTo(selected, { behavior: 'smooth' });
+    canvas.scrollTo(selected, { behavior: "smooth" });
     // Force the scroll, even if the element is alredy visible
     canvas.scrollTo(selected, { force: true });
     // editor.StyleManager.getProperty('typography', 'Rubik');
@@ -95,16 +145,16 @@ const WithGrapesjs = props => {
 
   /** handle open style container */
   const handleopen = () => {
-    setBuilder({...builder,panelRight:true})
-  }
+    setBuilder({ ...builder, panelRight: true });
+  };
 
   /** handle close style container */
   const handleClose = () => {
     const ele = window?.editor?.getSelected();
     window.editor?.selectToggle(ele);
-    setBuilder({...builder,panelRight:false})
-  }
-  
+    setBuilder({ ...builder, panelRight: false });
+  };
+
   /** after loaading of grapejs  */
   const onLoad = (editor) => {
     const categories = editor.BlockManager.getCategories();
@@ -120,94 +170,91 @@ const WithGrapesjs = props => {
     editor.setStyle(initialComponents.css);
 
     /** find block categories and make default open false */
-    categories.forEach(category => {
-      category.set('open', false).on('change:open', opened => {
-        opened.get('open') &&
-          categories.each(category => {
-            category !== opened && category.set('open', false);
+    categories.forEach((category) => {
+      category.set("open", false).on("change:open", (opened) => {
+        opened.get("open") &&
+          categories.each((category) => {
+            category !== opened && category.set("open", false);
           });
       });
     });
 
     const document = editor.Canvas.getDocument();
-    const styleEle = document.createElement('style');
+    const styleEle = document.createElement("style");
     styleEle.append(style);
     document.head.appendChild(styleEle);
   };
 
   /** Load custom data */
   const loadCustomData = () => {
-    const codeViewer = editor.CodeManager.getViewer('CodeMirror').clone();
+    const codeViewer = editor.CodeManager.getViewer("CodeMirror").clone();
     codeViewer.set({
-      ...{ codeName: 'htmlmixed', theme: 'hopscotch', readOnly: 0 },
+      ...{ codeName: "htmlmixed", theme: "hopscotch", readOnly: 0 },
     });
-    editor.on('load', onLoad);
+    editor.on("load", onLoad);
   };
 
   /** add commands */
-  const addCommands = editor => {
+  const addCommands = (editor) => {
     const commands = editor.Commands;
     commands.getAll();
-    commands.add('set-device-xs', {
+    commands.add("set-device-xs", {
       run(editor) {
-        editor.setDevice('Mobile');
+        editor.setDevice("Mobile");
       },
     });
-    commands.add('set-device-sm', {
+    commands.add("set-device-sm", {
       run(editor) {
-        editor.setDevice('Tablet');
+        editor.setDevice("Tablet");
       },
     });
-    commands.add('set-device-md', {
+    commands.add("set-device-md", {
       run(editor) {
-        editor.setDevice('Medium');
+        editor.setDevice("Medium");
       },
     });
-    commands.add('set-device-lg', {
+    commands.add("set-device-lg", {
       run(editor) {
-        editor.setDevice('Large');
+        editor.setDevice("Large");
       },
     });
-    commands.add('set-device-xl', {
+    commands.add("set-device-xl", {
       run(editor) {
-        editor.setDevice('Extra Large');
+        editor.setDevice("Extra Large");
       },
     });
-    commands.add('open-assset-manager', {
+    commands.add("open-assset-manager", {
       run(editor) {
         // console.log(EventTarget);
-        const myCommands = commands.get('core:open-assets');
-        myCommands.run(editor, { target: '_blank' });
+        const myCommands = commands.get("core:open-assets");
+        myCommands.run(editor, { target: "_blank" });
       },
     });
   };
 
   // add devices
-  const addDevices = editor => {
+  const addDevices = (editor) => {
     const deviceManager = editor.DeviceManager;
-    deviceManager.add('Mobile', '385px',
-      {
-        width : '385px',//width for mobile size
-        name: 'Mobile',// device name
-        widthMedia: '576px', // the width that will be used for the CSS media
-      }
-    );
-  };
-
-  /** component and canvas action events */
-  const isStylesOpen = editor => {
-    editor.on('component:selected', handleopen);
-    editor.on('component:deselected', handleClose);
-    editor.on('run:preview:before', function() {
+    deviceManager.add("Mobile", "385px", {
+      width: "385px", //width for mobile size
+      name: "Mobile", // device name
+      widthMedia: "576px", // the width that will be used for the CSS media
     });
   };
 
+  /** component and canvas action events */
+  const isStylesOpen = (editor) => {
+    editor.on("component:selected", handleopen);
+    editor.on("component:deselected", handleClose);
+    editor.on("run:preview:before", function () {});
+  };
+
   // add dynamic styles
-  const addStyleManager = editor => {
+  const addStyleManager = (editor) => {
     const styleManager = editor.StyleManager;
-    const sector = styleManager.getSector('advanced');
+    const sector = styleManager.getSector("advanced");
     /** added custom fonts */
-    const fontProperty = styleManager.getProperty('appearence', 'font-family');
+    const fontProperty = styleManager.getProperty("appearence", "font-family");
     // let list = fontProperty.get('list');
     // list.push({ value: 'Manrope, sans-serif', name: 'Manrope' });
     // list.push({ value: 'Nunito, sans-serif', name: 'Nunito' });
@@ -215,36 +262,36 @@ const WithGrapesjs = props => {
   };
 
   // image upload
-  const imageUploader = editor => {
-    editor.on('asset:upload:start', () => {
+  const imageUploader = (editor) => {
+    editor.on("asset:upload:start", () => {
       //  console.log('start');
     });
-    editor.on('asset:upload:error', err => {
+    editor.on("asset:upload:error", (err) => {
       //  console.log('errrr', err);
     });
-    editor.on('asset:add', () => {
+    editor.on("asset:add", () => {
       //  console.log('add');
     });
-    editor.on('asset:upload:response', response => {
+    editor.on("asset:upload:response", (response) => {
       const images = [];
       for (let i = 0; i < response.length; i++) {
-        images.push({ type: 'image', src: response[i] });
+        images.push({ type: "image", src: response[i] });
       }
       editor.AssetManager.add(images);
     });
-    editor.on('asset:upload:end', () => {
+    editor.on("asset:upload:end", () => {
       // console.log('end');
     });
-    editor.on('canvas:drop', function(e) {});
-    editor.on('canvas:dragenter', function() {
+    editor.on("canvas:drop", function (e) {});
+    editor.on("canvas:dragenter", function () {
       //console.log('dragenter');
-      editor.runCommand('sw-visibility');
-      editor.runCommand('core:component-outline');
+      editor.runCommand("sw-visibility");
+      editor.runCommand("core:component-outline");
       // console.log(document.getElementsByClassName('gjs-frame'));
     });
-    editor.on('canvas:drop', function() {
+    editor.on("canvas:drop", function () {
       //console.log('drop');
-      editor.stopCommand('sw-visibility');
+      editor.stopCommand("sw-visibility");
       // document.getElementsByClassName('gjs-frame').classList.add('h-100');
     });
   };
@@ -262,112 +309,193 @@ const WithGrapesjs = props => {
     setsettingOpen({
       ...settingOpen,
       open: !settingOpen.open,
-    })
-  }
-  
+    });
+  };
+
   const handleUpdatePage = (e) => {
     e.preventDefault();
     props.updatePage({
-      page_id:data._id,
-      body:{
-        name : settingOpen.name,
-        customdomain: settingOpen.domain
-      }
-    })
+      page_id: data._id,
+      body: {
+        name: settingOpen.name,
+        customdomain: settingOpen.domain,
+      },
+    });
     toggleDrawer();
-  }
+  };
 
   const updatePage = () => {
     props.updatePage({
       page_id: data._id,
-      body:{
-        content :{
-          html : editor.getHtml(),
-          css : editor.getCss(),
+      body: {
+        content: {
+          html: editor.getHtml(),
+          css: editor.getCss(),
           customheader: initialComponents.custom_head,
           customfooter: initialComponents.custom_footer,
-        }
-      }
-    })
-  }
-  
+        },
+      },
+    });
+  };
+
   const previewPage = () => {
-    window.open(data.live_url, data.live_url)
-  }
+    window.open(data.live_url, data.live_url);
+  };
 
   return (
     <div>
-        <Drawer anchor={'right'} open={settingOpen.open} onClose={toggleDrawer}>
-            <div style={{padding:"1rem"}}>
-              <form onSubmit={handleUpdatePage}>
-                  <div id="Page-name" className="field-wrapper input">
-                    <label htmlFor="page-name">Page Name</label>
-                    <input
-                      id="name"
-                      name="page-name"
-                      type="text"
-                      className="form-control"
-                      placeholder="Type your page name"
-                      value={settingOpen.name}
-                      onChange={e => {
-                        setsettingOpen({
-                          ...settingOpen,
-                          name:e.target.value
-                        });
-                      }}
-                    />
-                  </div>
-                  <div id="Domain-name" className="field-wrapper input" style={{marginBottom:"1rem", marginTop:"1rem"}}>
-                    <label htmlFor="domain-name">Domain Name</label>
-                    <input
-                      id="domain"
-                      name="domain-name"
-                      type="text"
-                      className="form-control"
-                      placeholder="Type your domain name"
-                      value={settingOpen.domain}
-                      onChange={e => {
-                        setsettingOpen({
-                          ...settingOpen,
-                          domain:e.target.value
-                        });
-                      }}
-                    />
-                  </div>
-                  <button className="btn btn-primary">
-                    Save
-                  </button>
-              </form>
+      <Drawer anchor={"right"} open={settingOpen.open} onClose={toggleDrawer}>
+        <div style={{ padding: "1rem" }}>
+          <form onSubmit={handleUpdatePage}>
+            <div id="Page-name" className="field-wrapper input">
+              <label htmlFor="page-name">Page Name</label>
+              <input
+                id="name"
+                name="page-name"
+                type="text"
+                className="form-control"
+                placeholder="Type your page name"
+                value={settingOpen.name}
+                onChange={(e) => {
+                  setsettingOpen({
+                    ...settingOpen,
+                    name: e.target.value,
+                  });
+                }}
+              />
             </div>
-        </Drawer>
+            <div
+              id="Domain-name"
+              className="field-wrapper input"
+              style={{ marginBottom: "1rem", marginTop: "1rem" }}
+            >
+              <label htmlFor="domain-name">Domain Name</label>
+              <input
+                id="domain"
+                name="domain-name"
+                type="text"
+                className="form-control"
+                placeholder="Type your domain name"
+                value={settingOpen.domain}
+                onChange={(e) => {
+                  setsettingOpen({
+                    ...settingOpen,
+                    domain: e.target.value,
+                  });
+                }}
+              />
+            </div>
+            <button className="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </Drawer>
       <div class="panel__top">
         {/* <div>
         </div> */}
-        <div className="panel__switcher" >
+        <div className="panel__switcher">
           <KeyboardBackspaceOutlined className="go_back" />
-
         </div>
         <div className="gjs-panel-action-buttons">
-          <div className="views-actions" style={{position:"static"}}></div>
+          <div className="views-actions" style={{ position: "static" }}></div>
         </div>
         <div className="panel-action">
-          <TuneOutlined style={{marginLeft:'1rem', cursor:"pointer"}} fontSize="medium" onClick={toggleDrawer}/>
+          <TuneOutlined
+            style={{ marginLeft: "1rem", cursor: "pointer" }}
+            fontSize="medium"
+            onClick={toggleDrawer}
+          />
         </div>
       </div>
       <div class="editor-row ml-4">
-        <div id="blocks" />
+        <div>
+          {/* <div className="panel__top">... (panel__top code)</div> */}
+          <div
+            className="container-fluid"
+            style={{ boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }}
+          >
+            <div className="row">
+              <nav className="col-md-2 bg-light" style={{ position: "sticky" }}>
+                <div style={{ paddingTop: "10px" }}>
+                  {sidebarItems.map((item, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        padding: "10px",
+                        marginBottom: "10px",
+                        display: "flex",
+                        alignItems: "center",
+                        display: "flex",
+                        flexDirection: "column",
+                        margin: "auto",
+                        textAlign: "center",
+                      }}
+                    >
+                      <img
+                        className="sample-image"
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          marginBottom: "10px",
+                        }}
+                        src={item.image}
+                      />
+                      <span
+                        style={{ fontWeight: "bold" }}
+                        onClick={handleLinkClick}
+                      >
+                        {item.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </nav>
+            </div>
+          </div>
+
+          {/* ... (editor-row code) */}
+
+          <div
+            ref={blockRef}
+            style={{
+              position: "absolute",
+              left: "74px",
+              top: "80px",
+              width: "200px",
+              display: showSecondarySidebar ? "block" : "none",
+              border: "1px solid red",
+            }}
+            id="blocks"
+          ></div>
+          <div
+            className="panel__right"
+            style={
+              builder.panelRight ? { display: "block" } : { display: "none" }
+            }
+          ></div>
+        </div>
+
         <div class="editor-canvas">
           <div id="gjs" />
         </div>
-          <div class="panel__right" style={builder.panelRight ? {display:'block'}: {display:'none'}}>
-            <div className="close-icon">
-              <i className="crossCircle" style={{cursor:'pointer', color:'black'}} onClick={handleClose}></i>
-            </div>
-            <div id="traits-container" />
-            <div class="layers-container" />
-            <div class="styles-container" />
+        <div
+          class="panel__right"
+          style={
+            builder.panelRight ? { display: "block" } : { display: "none" }
+          }
+        >
+          <div className="close-icon">
+            <i
+              className="crossCircle"
+              style={{ cursor: "pointer", color: "black" }}
+              onClick={handleClose}
+            ></i>
           </div>
+          <div id="traits-container" />
+          <div class="layers-container" />
+          <div class="styles-container" />
+        </div>
       </div>
+      
     </div>
   );
 };
